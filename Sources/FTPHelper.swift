@@ -75,7 +75,7 @@ internal extension FTPFileProvider {
             }
 
             // More of the initial prompt to log in may have arrived; skip those lines
-            let modifiedResponse = response.split(separator: "\n").filter({ !$0.starts(with: "22") }).joined(separator: "\n")
+            let modifiedResponse = response.split { $0.isNewline }.filter({ !$0.starts(with: "22") }).joined(separator: "\n")
 
             // needs password
             if modifiedResponse.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("33") {
