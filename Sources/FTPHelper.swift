@@ -73,9 +73,12 @@ internal extension FTPFileProvider {
                 completionHandler(nil)
                 return
             }
-            
+
+            // More of the initial prompt to log in may have arrived; skip those lines
+            let modifiedResponse = response.split(separator: "\n").filter({ !$0.starts(with: "22") }).joined(separator: "\n")
+
             // needs password
-            if response.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("33") {
+            if modifiedResponse.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("33") {
                 self.execute(command: "PASS \(self.credential?.password ?? "fileprovider@")", on: task) { (response, error) in
                     if response?.hasPrefix("23") ?? false {
                         completionHandler(nil)
